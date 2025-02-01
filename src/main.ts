@@ -5,7 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.enableCors({
-    origin: ['http://localhost:4200', 'https://https://quotesfrontend.vercel.app/home'],
+    origin: ['http://localhost:4200', 'https://https://quotesfrontend.vercel.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

@@ -8,7 +8,6 @@ async function bootstrap() {
     origin: [
       'https://quotesfrontend.vercel.app',
       'http://localhost:4200',
-      'https://quotesfrontend-marcin-mierzwas-projects.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,

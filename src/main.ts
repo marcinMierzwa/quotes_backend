@@ -11,6 +11,8 @@ async function bootstrap() {
       'https://quotesfrontend-marcin-mierzwas-projects.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
-  });await app.listen(process.env.PORT ?? 3000);}
+    exposedHeaders: ['Access-Control-Allow-Origin'],
+    });await app.listen(process.env.PORT ?? 3000);}
 bootstrap();

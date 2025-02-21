@@ -1,14 +1,16 @@
 import { Transform } from "class-transformer";
-import { IsInt, IsOptional, IsString, MinLength } from "class-validator";
+import { IsIn, IsInt, IsOptional, IsString, MinLength } from "class-validator";
 
 export class GetQuotesDto {
     @IsInt()
     @IsOptional()
-    readonly skip?: number;
+    @Transform(({ value }) => Number(value))
+    readonly skip?: number = 0;
   
     @IsInt()
     @IsOptional()
-    readonly limit?: number;
+    @Transform(({ value }) => Number(value))
+    readonly limit?: number = 3;
 
     @IsString()
     @MinLength(3)
@@ -25,5 +27,10 @@ export class GetQuotesDto {
     @IsOptional()
     @Transform(({ value }) => value.toLowerCase())
     readonly character?: string;
+
+    @IsString()
+    @IsOptional()
+    @IsIn(['asc', 'desc', 'mostLikes', 'leastLikes'])
+    readonly sort?: string = 'asc';
   }
   

@@ -3,6 +3,8 @@ import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dtos/create-quotes.dto';
 import { GetQuotesDto } from './dtos/get-quotes.dto';
 
+// http://localhost:3000/quotes?limit=3&skip=0&movie=The Two Towers&character=Gandalf
+
 @Controller('quotes')
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
@@ -13,7 +15,7 @@ export class QuotesController {
   }
 
   @Get()
-  findAll(@Query() getQuotesDto: GetQuotesDto) {    
+  findAll(@Query() getQuotesDto: GetQuotesDto) {        
     return this.quotesService.findAll(getQuotesDto);
   }
 

@@ -5,6 +5,8 @@ import { DatabaseModule } from './database/database/database.module';
 import { CharactersModule } from './domain/characters/characters.module';
 import { MoviesModule } from './domain/movies/movies.module';
 import { QuotesModule } from './domain/quotes/quotes.module';
+import { AuthModule } from './domain/auth/auth.module';
+import { UsersModule } from './domain/users/users.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { QuotesModule } from './domain/quotes/quotes.module';
     DatabaseModule,
     MoviesModule,
     CharactersModule,
+    AuthModule,
+    UsersModule
   ],
   controllers: [],
   providers: [],

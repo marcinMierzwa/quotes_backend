@@ -15,8 +15,10 @@ export class AuthService {
             throw new UnauthorizedException('Email is already in use')
         }
         const user = await this.userService.createUser(signUpDto);
-        console.log(user);
-        
+        return {
+            message: 'User successfully registered',
+            userId: user.id
+        }
     }
 
 }

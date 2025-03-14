@@ -14,11 +14,11 @@ export class User extends Document {
     @Prop()
     password?: string;
 
-    @Prop (  {default: false} )
-    isEmailAdressConfirmed: boolean;
+    @Prop({ default: false }) 
+    verified: boolean;
 
-    @Prop ()
-    googleId?: string;
+    @Prop({ enum: ['user', 'admin'], default: 'user'})
+    role: 'user' | 'admin';
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -22,7 +22,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(port || 3000);
+  await app.listen(3000);
   console.log(`🚀 Server is running on http://localhost:${port}`);
 }
 

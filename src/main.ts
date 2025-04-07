@@ -15,7 +15,7 @@ async function bootstrap() {
     configService.get<string>('DATASOURCE_DEV_CLIENT_URL'),
   ].filter(Boolean); 
 
-  app.use(cookieParser());
+  // app.use(cookieParser());
   app.enableCors({
     origin: clientUrls,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

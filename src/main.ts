@@ -16,11 +16,11 @@ async function bootstrap() {
   ].filter(Boolean); 
 
   app.use(cookieParser());
-  app.enableCors({
-    origin: clientUrls,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: clientUrls,
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  //   credentials: true,
+  // });
 
   await app.listen(3000);
   console.log(`🚀 Server is running on http://localhost:${port}`);

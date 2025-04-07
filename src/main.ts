@@ -1,14 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT');
+  const port = configService.get<number>('PORT') || 3000;
 
   const clientUrls = [
     configService.get<string>('DATASOURCE_PROD_CLIENT_URL'),

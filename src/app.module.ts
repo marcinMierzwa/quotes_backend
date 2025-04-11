@@ -7,6 +7,7 @@ import { MoviesModule } from './domain/movies/movies.module';
 import { QuotesModule } from './domain/quotes/quotes.module';
 import { AuthModule } from './domain/auth/auth.module';
 import { UsersModule } from './domain/users/users.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { UsersModule } from './domain/users/users.module';
     MoviesModule,
     CharactersModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    MailModule
   ],
   controllers: [],
   providers: [],

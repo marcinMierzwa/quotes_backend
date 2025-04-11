@@ -2,10 +2,14 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { SignUpDto } from './dtos/sign-up.dto';
 import { ObjectId } from 'mongoose';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private mailService: MailService
+  ) {}
 
   //SIGN_UP
   async createUser(signUpDto: SignUpDto) {
@@ -15,10 +19,11 @@ export class AuthService {
       throw new UnauthorizedException('Email is already in use');
     }
     const user = await this.userService.createUser(signUpDto);
-    // here handle send email to verify account
+    // here handle send emails to welcome and verify account
+    await this.mailService.sendWelcomeEmail(user.email)
     return {
       message: 'User successfully registered',
-      userId: user.id,
+      veryfied: user.verified,
     };
   }
 
@@ -28,6 +33,7 @@ export class AuthService {
     const verified = true;
     if (!user) {
       await this.userService.createUser({ email, verified });
+      // here handle send email to welcome new user
     }
     if (user.verified === false) {
       const _id: ObjectId = user.id;

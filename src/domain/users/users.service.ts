@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
-import { Model, ObjectId } from 'mongoose';
-import { SignUpDto } from '../auth/dtos/sign-up.dto';
+import { Model } from 'mongoose';
 import { CreateUser } from '../auth/models/create-user.interface';
 import { UpadateVerified } from '../auth/models/update-verified.interface';
 

@@ -8,6 +8,7 @@ import { QuotesModule } from './domain/quotes/quotes.module';
 import { AuthModule } from './domain/auth/auth.module';
 import { UsersModule } from './domain/users/users.module';
 import { MailModule } from './mail/mail.module';
+import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { MailModule } from './mail/mail.module';
     CharactersModule,
     AuthModule,
     UsersModule,
-    MailModule
+    MailModule,
+    TokenModule
   ],
   controllers: [],
   providers: [],

@@ -19,7 +19,7 @@ export class MailService {
     const subject = 'Verify your email address';
     const html = `
       <p>Click the link below to verify your email address</p>
-      <a href="https://quotesfrontend.vercel.app/verify?token=${token}">Click this link</a>
+      <a href="https://quotesfrontend.vercel.app/verify?token=${token}">Click this link to verify your email address</a>
     `;
 
     return this.resendService.sendEmail({ to, subject, html });

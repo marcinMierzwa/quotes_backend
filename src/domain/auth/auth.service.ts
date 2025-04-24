@@ -18,7 +18,7 @@ export class AuthService {
     const { email, password } = signUpDto;
     const userInDataBase = await this.userService.findByEmail(email);
     if (userInDataBase) {
-      throw new UnauthorizedException('Email is already in use');
+      throw new UnauthorizedException('Sorry, email is already in use!');
     }
     const user = await this.userService.createUser(signUpDto);
     // send email to welcome 
@@ -32,7 +32,7 @@ export class AuthService {
     }
 
     return {
-      message: 'User successfully registered',
+      message: 'Wonderfull! Your account has just been created, now still check your email inbox and confirm your adrress.',
       veryfied: user.verified,
     };
   }

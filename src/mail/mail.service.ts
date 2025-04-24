@@ -19,7 +19,7 @@ export class MailService {
     const subject = 'Verify your email address';
     const html = `
       <p>Click the link below to verify your email address</p>
-      <a href="https://quotesfrontend.vercel.app/login?token=${token}">Click this link to verify your email address</a>
+      <a href="http://localhost:4200/login?token=${token}">Click this link to verify your email address</a>
       <p>The link will be active for 7 days</p>
 
     `;

@@ -32,7 +32,7 @@ export class AuthService {
     }
 
     return {
-      message: 'Wonderfull! Your account has just been created, now still check your email inbox and confirm your adrress.',
+      message: 'Your account has just been created, now still check your email inbox and confirm your adrress.',
       veryfied: user.verified,
     };
   }

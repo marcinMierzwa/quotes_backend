@@ -4,6 +4,7 @@ import { SignUpDto } from './dtos/sign-up.dto';
 import { ObjectId } from 'mongoose';
 import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
+import { VerifyEmailDto } from './dtos/verify-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,8 +26,8 @@ export class AuthService {
     await this.mailService.sendWelcomeEmail(user.email)
     // send email to verify account
     if (user.verified === false) {
-      // generate jwt token with expiry date 7 days
-      const token = this.tokenService.generateVerifyEmailToken(user.email);
+      // generate and send verification token 
+    const token =  await this.tokenService.generateVerifyEmailToken(user._id);
     await this.mailService.sendVerificationEmail(user.email, token);
       
     }
@@ -50,5 +51,13 @@ export class AuthService {
       const _id: ObjectId = user.id;
       await this.userService.verifyUser(({_id, verified}));
     }
+  }
+
+  //VERIFY EMAIL ADDRESS
+  async verifyEmail(tokenDto: VerifyEmailDto) {
+    const {token} = tokenDto;
+    const isVeryfied = await this.tokenService.verifyEmailToken(token);
+    console.log(isVeryfied);
+    
   }
 }

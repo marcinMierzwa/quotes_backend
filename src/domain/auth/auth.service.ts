@@ -23,11 +23,11 @@ export class AuthService {
     }
     const user = await this.userService.createUser(signUpDto);
     // send email to welcome 
-    await this.mailService.sendWelcomeEmail(user.email)
+    await this.mailService.sendWelcomeEmail(user.email) !!!!!!!!!!!!!!!!!!!!!!!
     // send email to verify account
     if (user.verified === false) {
       // generate and send verification token 
-    const token =  await this.tokenService.generateVerifyEmailToken(user._id);
+    const token =  await this.tokenService.generateEmailToken(user._id);
     await this.mailService.sendVerificationEmail(user.email, token);
       
     }
@@ -44,7 +44,7 @@ export class AuthService {
     const verified = true;
     if (!user) {
       user = await this.userService.createUser({ email, verified });
-      await this.mailService.sendWelcomeEmail(user.email)
+      await this.mailService.sendWelcomeEmail(user.email) !!!!!!!!!!!!!!!!!!!
       // send email to welcome new user
     }
     if (user.verified === false) {
@@ -55,9 +55,6 @@ export class AuthService {
 
   //VERIFY EMAIL ADDRESS
   async verifyEmail(tokenDto: VerifyEmailDto) {
-    const {token} = tokenDto;
-    const isVeryfied = await this.tokenService.verifyEmailToken(token);
-    console.log(isVeryfied);
-    
+    return await this.tokenService.verifyEmailToken(tokenDto);
   }
 }

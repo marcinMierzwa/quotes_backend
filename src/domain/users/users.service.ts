@@ -1,32 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateUser } from '../auth/models/create-user.interface';
 import { UpadateVerified } from '../auth/models/update-verified.interface';
 
 @Injectable()
 export class UsersService {
-    constructor (@InjectModel(User.name) private user: Model<User>) {}
+    constructor (@InjectModel(User.name) private userModel: Model<User>) {}
 
     //UTILS
 
     async findByEmail(email: string) {
-        return await this.user.findOne({ email });
+        return await this.userModel.findOne({ email });
     }
 
-    async findById(id: string) {
-        return await this.user.findOne({ id });
-    }
+    async findById(id: string | Types.ObjectId) {
+        return this.userModel.findById(id);
+      }
 
     //SIGN_UP
 
     async createUser(createUser: CreateUser) {
-        return await this.user.create(createUser);
+        return await this.userModel.create(createUser);
     }
 
     async verifyUser(updateVerified: UpadateVerified) {
-        await this.user.updateOne(updateVerified);
+        await this.userModel.updateOne(updateVerified);
     }
 
 }

@@ -19,9 +19,7 @@ export class MailService {
     const subject = 'Verify your email address';
     const html = `
       <p>Click the link below to verify your email address</p>
-      <a href="http://localhost:4200/login?token=${token}">Click this link to verify your email address</a>
-      <p>The link will be active for 7 days</p>
-
+      <a href="http://localhost:4200/verify?token=${token}">Click this link to verify your email address</a>
     `;
 
     return this.resendService.sendEmail({ to, subject, html });

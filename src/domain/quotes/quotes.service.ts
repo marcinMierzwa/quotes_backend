@@ -38,8 +38,8 @@ export class QuotesService {
     } else {
       sortOrder = { dialog: 1 };
     }
-    console.log('Filter:', filter); // jaki filtr jest tworzony
-    console.log('Skip:', skip, 'Limit:', limit, 'Sort:', sort);
+    // console.log('Filter:', filter); // jaki filtr jest tworzony
+    // console.log('Skip:', skip, 'Limit:', limit, 'Sort:', sort);
 
 
     const quotes = await this.quoteModel

@@ -1,7 +1,5 @@
 import {
-  IsBoolean,
   IsEmail,
-  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -11,12 +9,12 @@ import {
 export class SignUpDto {
     
   @IsEmail()
-  @MaxLength(50, { message: 'Email should contain a maximum of 50 characters' })
+  @MaxLength(50, { message: 'Password must not exceed 50 characters' })
   email: string;
 
   @IsString()
-  @MaxLength(50, { message: 'Email should contain a maximum of 50 characters' })
   @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @MaxLength(50, { message: 'Password must not exceed 50 characters' })
   @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
     {

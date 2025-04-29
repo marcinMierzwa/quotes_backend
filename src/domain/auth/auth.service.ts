@@ -5,6 +5,8 @@ import { ObjectId } from 'mongoose';
 import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
+import { LoginDto } from './dtos/login.dto';
+import * as argon2 from 'argon2'; 
 
 @Injectable()
 export class AuthService {
@@ -38,6 +40,22 @@ export class AuthService {
     };
   }
 
+  //VERIFY EMAIL ADDRESS
+  async verifyEmail(tokenDto: VerifyEmailDto) {
+    return await this.tokenService.verifyEmailToken(tokenDto);
+  }
+
+  //LOGIN LOCAL
+
+  async validateUser(email: string, password: string) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) throw new UnauthorizedException('Sorry, user not found!');
+    const isPasswordMatch = await argon2.verify(user.password, password);
+    if(!isPasswordMatch) throw new UnauthorizedException('Invalid Credentials!');
+
+    return { message: 'Successful login!', id: user._id };
+  }
+
   //SIGN_UP_&&_LOGIN_GOOGLE
   async validateGoogleUser(email: string) {
     let user = await this.userService.findByEmail(email);
@@ -53,8 +71,4 @@ export class AuthService {
     }
   }
 
-  //VERIFY EMAIL ADDRESS
-  async verifyEmail(tokenDto: VerifyEmailDto) {
-    return await this.tokenService.verifyEmailToken(tokenDto);
-  }
 }

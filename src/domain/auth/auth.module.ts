@@ -5,10 +5,11 @@ import { UsersModule } from '../users/users.module';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { MailModule } from 'src/mail/mail.module';
 import { TokenModule } from 'src/token/token.module';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthService, LocalStrategy, GoogleStrategy],
   imports: [UsersModule, MailModule, TokenModule]
 })
 export class AuthModule {}

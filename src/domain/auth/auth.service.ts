@@ -10,9 +10,7 @@ import { ObjectId } from 'mongoose';
 import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
-import { LoginDto } from './dtos/login.dto';
 import * as argon2 from 'argon2';
-import { use } from 'passport';
 
 @Injectable()
 export class AuthService {
@@ -67,7 +65,6 @@ export class AuthService {
   }
 
   //LOGIN LOCAL
-
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new UnauthorizedException('Sorry, user not found!');

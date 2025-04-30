@@ -19,13 +19,21 @@ export class TokenService {
 
     // #generating tokens
     async generateEmailToken(userId: Types.ObjectId): Promise<string> {
-        const token  = uuidv4();
-        await this.verifyTokenModel.create({
-          userId,
-          token
-        })
-        return token
-      }
+      const token = uuidv4();
+    
+      await this.verifyTokenModel.updateOne(
+        { userId },
+        {
+          $set: {
+            token,
+            createdAt: new Date(), 
+          },
+        },
+        { upsert: true }
+      );
+    
+      return token;
+    }
     
     //  #veryfing tokens
     async verifyEmailToken(token: VerifyEmailDto): Promise<{ message: string }> {

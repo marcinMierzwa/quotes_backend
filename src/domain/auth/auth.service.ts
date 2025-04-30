@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { SignUpDto } from './dtos/sign-up.dto';
 import { ObjectId } from 'mongoose';
@@ -6,14 +11,15 @@ import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { LoginDto } from './dtos/login.dto';
-import * as argon2 from 'argon2'; 
+import * as argon2 from 'argon2';
+import { use } from 'passport';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
     private mailService: MailService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
   //SIGN_UP
@@ -24,18 +30,18 @@ export class AuthService {
       throw new UnauthorizedException('Sorry, email is already in use!');
     }
     const user = await this.userService.createUser(signUpDto);
-    // send email to welcome 
-    await this.mailService.sendWelcomeEmail(user.email) !!!!!!!!!!!!!!!!!!!!!!!
+    // send email to welcome
+    await this.mailService.sendWelcomeEmail(user.email);
     // send email to verify account
     if (user.verified === false) {
-      // generate and send verification token 
-    const token =  await this.tokenService.generateEmailToken(user._id);
-    await this.mailService.sendVerificationEmail(user.email, token);
-      
+      // generate and send verification token
+      const token = await this.tokenService.generateEmailToken(user._id);
+      await this.mailService.sendVerificationEmail(user.email, token);
     }
 
     return {
-      message: 'Your account has just been created, now still check your email inbox and confirm your adrress.',
+      message:
+        'Your account has just been created, now still check your email inbox and confirm your adrress.',
       veryfied: user.verified,
     };
   }
@@ -45,15 +51,41 @@ export class AuthService {
     return await this.tokenService.verifyEmailToken(tokenDto);
   }
 
+  //RESEND VERIFICATION EMAIL
+  async resendVerification(email: string) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) throw new NotFoundException('User with this email does not exist');
+    if (user.verified) throw new BadRequestException('Email is already verified');
+    const token = await this.tokenService.generateEmailToken(user._id);
+    console.log(token);
+    
+    await this.mailService.sendVerificationEmail(user.email, token);
+
+    return {
+      message: 'Verification email has been resent, now still check your email inbox and confirm your adrress.',
+    };
+  }
+
   //LOGIN LOCAL
 
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new UnauthorizedException('Sorry, user not found!');
     const isPasswordMatch = await argon2.verify(user.password, password);
-    if(!isPasswordMatch) throw new UnauthorizedException('Invalid Credentials!');
-
-    return { message: 'Successful login!', id: user._id };
+    if (!isPasswordMatch)
+      throw new UnauthorizedException('Invalid Credentials!');
+    const isVerified = user.verified;
+    if (!isVerified) {
+      throw new UnauthorizedException({
+        message:
+          'Your email address is not verified. Please check your inbox for the verification link you received when creating your account, or click link below to get a new one.',
+        code: 'EMAIL_NOT_VERIFIED',
+      });
+    }
+    return {
+      message: 'Successful login!',
+      id: user._id,
+    };
   }
 
   //SIGN_UP_&&_LOGIN_GOOGLE
@@ -62,13 +94,12 @@ export class AuthService {
     const verified = true;
     if (!user) {
       user = await this.userService.createUser({ email, verified });
-      await this.mailService.sendWelcomeEmail(user.email) !!!!!!!!!!!!!!!!!!!
+      await this.mailService.sendWelcomeEmail(user.email)!!!!!!!!!!!!!!!!!!!;
       // send email to welcome new user
     }
     if (user.verified === false) {
       const _id: ObjectId = user.id;
-      await this.userService.verifyUser(({_id, verified}));
+      await this.userService.verifyUser({ _id, verified });
     }
   }
-
 }

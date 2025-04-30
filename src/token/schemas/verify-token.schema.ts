@@ -7,10 +7,10 @@ import { Document, Types } from "mongoose";
     versionKey: false,
 })
 export class VerifyToken extends Document {
-    @Prop( {required: true} )
+    @Prop( {required: true, unique: true} )
     userId: Types.ObjectId;
 
-    @Prop( {required: true , unique: true} )
+    @Prop( {required: true } )
     token: string;
 
     @Prop( {default: false} )

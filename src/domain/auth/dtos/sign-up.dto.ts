@@ -8,8 +8,8 @@ import {
 
 export class SignUpDto {
     
-  @IsEmail()
-  @MaxLength(50, { message: 'Password must not exceed 50 characters' })
+  @IsEmail({}, { message: 'Email must be a valid email address' })
+  @MaxLength(50, { message: 'Email must not exceed 50 characters' })
   email: string;
 
   @IsString()

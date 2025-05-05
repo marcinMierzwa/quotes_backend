@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { SignUpDto } from './dtos/sign-up.dto';
-import { ObjectId } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
@@ -40,7 +40,6 @@ export class AuthService {
     return {
       message:
         'Your account has just been created, now still check your email inbox and confirm your adrress.',
-      veryfied: user.verified,
     };
   }
 
@@ -85,6 +84,12 @@ export class AuthService {
     };
   }
 
+  //LOGIN JWT
+  async login(userId: Types.ObjectId) {
+    const token = await this.tokenService.generateAccessToken(userId);
+    return { accessToken: token}
+  }
+  
   //SIGN_UP_&&_LOGIN_GOOGLE
   async validateGoogleUser(email: string) {
     let user = await this.userService.findByEmail(email);

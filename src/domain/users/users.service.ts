@@ -7,26 +7,36 @@ import { UpadateVerified } from '../auth/models/update-verified.interface';
 
 @Injectable()
 export class UsersService {
-    constructor (@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-    //UTILS
+  //UTILS
 
-    async findByEmail(email: string) {
-        return await this.userModel.findOne({ email });
-    }
+  async findByEmail(email: string) {
+    return await this.userModel.findOne({ email });
+  }
 
-    async findById(id: string | Types.ObjectId) {
-        return this.userModel.findById(id);
-      }
+  async findById(id: string | Types.ObjectId) {
+    return this.userModel.findById(id);
+  }
 
-    //SIGN_UP
+  //SIGN_UP
 
-    async createUser(createUser: CreateUser) {
-        return await this.userModel.create(createUser);
-    }
+  async createUser(createUser: CreateUser) {
+    return await this.userModel.create(createUser);
+  }
 
-    async verifyUser(updateVerified: UpadateVerified) {
-        await this.userModel.updateOne(updateVerified);
-    }
+  async verifyUser(updateVerified: UpadateVerified) {
+    await this.userModel.updateOne(updateVerified);
+  }
 
+  //GET USER
+  async getUser(id: Types.ObjectId) {
+    const user = await this.findById(id);
+    return {
+      message: 'Successfuly login!',
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+  }
 }

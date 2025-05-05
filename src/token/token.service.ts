@@ -4,9 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { VerifyToken } from './schemas/verify-token.schema';
-import { Model, ObjectId, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UsersService } from 'src/domain/users/users.service';
 import { VerifyEmailDto } from 'src/domain/auth/dtos/verify-email.dto';
+import { AuthJwtPayload } from './models/auth-jwt-payload.type';
 
 @Injectable()
 export class TokenService {
@@ -35,6 +36,12 @@ export class TokenService {
       return token;
     }
     
+    async generateAccessToken(userId: Types.ObjectId): Promise<string> {
+      const payload: AuthJwtPayload = { sub: userId};
+      const token = this.jwtService.sign(payload);
+      return token
+    }
+
     //  #veryfing tokens
     async verifyEmailToken(token: VerifyEmailDto): Promise<{ message: string }> {
       // validate token

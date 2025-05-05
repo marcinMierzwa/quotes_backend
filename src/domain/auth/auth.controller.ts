@@ -36,7 +36,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
-    return req.user
+    return await this.authService.login(req.user.id);
   }
 
    //SIGNUP && LOGIN GOOGLE

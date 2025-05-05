@@ -12,7 +12,7 @@ import { UsersModule } from 'src/domain/users/users.module';
     UsersModule,
     JwtModule.registerAsync ({
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('DATASOURCE_JWT_ACCESS_SECRE'),
+        secret: configService.get<string>('DATASOURCE_JWT_ACCESS_SECRET'),
         signOptions: {
           expiresIn: configService.get<string>('DATASOURCE_JWT_ACCESS_EXPIRES_IN')
         }

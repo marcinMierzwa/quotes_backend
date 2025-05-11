@@ -9,15 +9,14 @@ export class MoviesService {
     constructor(@InjectModel(Movie.name) private movieModel: Model<Movie>) {}
 
 
-      async getAllMoviesName() {
-        const allMoviesName = await this.movieModel.find({}, 'name').exec();
+      async getMovies() {
+        const movies = await this.movieModel.find();
     
-        if (!allMoviesName || allMoviesName.length === 0) {
+        if (!movies || movies.length === 0) {
           throw new NotFoundException('No movies found');
         }
         return {
-          data: allMoviesName,
-          message: 'Movies Names got succesfully',
+          movies: movies
         };
     
       }

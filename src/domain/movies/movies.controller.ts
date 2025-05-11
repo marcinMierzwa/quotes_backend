@@ -8,8 +8,8 @@ export class MoviesController {
 
 
   @Get()
-  getAllMoviesName() {
-    return this.moviesService.getAllMoviesName();
+  getMovies() {
+    return this.moviesService.getMovies();
   }
 
 

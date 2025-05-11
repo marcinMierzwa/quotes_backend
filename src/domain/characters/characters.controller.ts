@@ -8,8 +8,8 @@ export class CharactersController {
 
 
   @Get()
-  getAllCharactersName() {
-    return this.charactersService.getAllCharactersName();
+  getAllCharacters() {
+    return this.charactersService.getCharacters();
   }
 
   @Post()

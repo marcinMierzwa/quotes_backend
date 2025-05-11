@@ -10,15 +10,14 @@ export class CharactersService {
     @InjectModel(Character.name) private characterModel: Model<Character>,
   ) {}
 
-  async getAllCharactersName() {
-    const allCharactersName = await this.characterModel.find({}, 'name').exec();
+  async getCharacters() {
+    const characters = await this.characterModel.find();
 
-    if (!allCharactersName || allCharactersName.length === 0) {
+    if (!characters || characters.length === 0) {
       throw new NotFoundException('No characters found');
     }
     return {
-      data: allCharactersName,
-      message: 'Characters Names got succesfully',
+      characters: characters
     };
 
   }

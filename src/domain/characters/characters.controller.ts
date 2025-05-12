@@ -7,9 +7,9 @@ export class CharactersController {
   constructor(private readonly charactersService: CharactersService) {}
 
 
-  @Get()
-  getAllCharacters() {
-    return this.charactersService.getCharacters();
+  @Get('character-name')
+  getCharacterName() {
+    return this.charactersService.getCharacterName();
   }
 
   @Post()

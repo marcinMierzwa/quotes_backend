@@ -7,9 +7,9 @@ export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
 
-  @Get()
-  getMovies() {
-    return this.moviesService.getMovies();
+  @Get('movie-name')
+  getAllMovieName() {
+    return this.moviesService.getAllMovieName();
   }
 
 

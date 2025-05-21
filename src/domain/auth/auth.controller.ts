@@ -1,4 +1,5 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dtos/sign-up.dto';
 import { GoogleAuthGuard } from './guards/google-auth-guard/google-auth-guard.guard';
@@ -35,8 +36,22 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
-    return await this.authService.login(req.user.id);
+  async login(@Request() req, @Res({ passthrough: true }) response: Response,) {
+    const tokens = await this.authService.login(req.user.id);
+
+    response.cookie('refreshToken', tokens.refresh, {
+      httpOnly: true,
+      secure: false, // change to true on production
+      sameSite: 'strict',
+      path: '/', // if only for /auth/refresh
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+    });
+
+    return {
+      accessToken: tokens.access,
+      message: 'Successful login!'
+    };
+    
   }
 
    //SIGNUP && LOGIN GOOGLE

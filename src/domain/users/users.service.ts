@@ -33,7 +33,6 @@ export class UsersService {
   async getUser(id: Types.ObjectId) {
     const user = await this.findById(id);
     return {
-      message: 'Successfuly login!',
       id: user.id,
       email: user.email,
       role: user.role,

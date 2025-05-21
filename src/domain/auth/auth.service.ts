@@ -51,15 +51,18 @@ export class AuthService {
   //RESEND VERIFICATION EMAIL
   async resendVerification(email: string) {
     const user = await this.userService.findByEmail(email);
-    if (!user) throw new NotFoundException('User with this email does not exist');
-    if (user.verified) throw new BadRequestException('Email is already verified');
+    if (!user)
+      throw new NotFoundException('User with this email does not exist');
+    if (user.verified)
+      throw new BadRequestException('Email is already verified');
     const token = await this.tokenService.generateEmailToken(user._id);
     console.log(token);
-    
+
     await this.mailService.sendVerificationEmail(user.email, token);
 
     return {
-      message: 'Verification email has been resent, now still check your email inbox and confirm your adrress.',
+      message:
+        'Verification email has been resent, now still check your email inbox and confirm your adrress.',
     };
   }
 
@@ -86,10 +89,11 @@ export class AuthService {
 
   //LOGIN JWT
   async login(userId: Types.ObjectId) {
-    const token = await this.tokenService.generateAccessToken(userId);
-    return { accessToken: token}
+    const accessToken = await this.tokenService.generateAccessToken(userId);
+    const refreshToken = await this.tokenService.generateRefreshToken(userId);
+    return { access: accessToken, refresh: refreshToken };
   }
-  
+
   //SIGN_UP_&&_LOGIN_GOOGLE
   async validateGoogleUser(email: string) {
     let user = await this.userService.findByEmail(email);

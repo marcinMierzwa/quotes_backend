@@ -42,6 +42,16 @@ export class TokenService {
       return token
     }
 
+    async generateRefreshToken(userId: Types.ObjectId): Promise<string> {
+      const payload: AuthJwtPayload = { sub: userId };
+    
+      const token = this.jwtService.sign(payload, {
+        secret: this.config.get<string>('DATASOURCE_JWT_REFRESH_SECRET'),
+        expiresIn: this.config.get<string>('DATASOURCE_JWT_REFRESH_EXPIRES_IN'),
+      });
+      return token;
+    }
+
     //  #veryfing tokens
     async verifyEmailToken(token: VerifyEmailDto): Promise<{ message: string }> {
       // validate token

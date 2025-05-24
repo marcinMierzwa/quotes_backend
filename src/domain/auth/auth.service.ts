@@ -94,6 +94,11 @@ export class AuthService {
     return { access: accessToken, refresh: refreshToken };
   }
 
+  //REFRESH
+  async refreshToken(userId: Types.ObjectId) {
+    return await this.tokenService.generateAccessToken(userId);
+  }
+
   //SIGN_UP_&&_LOGIN_GOOGLE
   async validateGoogleUser(email: string) {
     let user = await this.userService.findByEmail(email);

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request, Res, Req } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dtos/sign-up.dto';
@@ -6,6 +6,8 @@ import { GoogleAuthGuard } from './guards/google-auth-guard/google-auth-guard.gu
 import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
+import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -42,9 +44,10 @@ export class AuthController {
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
       secure: false, // change to true on production
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+
     });
 
     return {
@@ -53,6 +56,19 @@ export class AuthController {
     };
     
   }
+
+  // REFRESH 
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(RefreshAuthGuard)
+  @Post('refresh')
+  async refreshToken(@Req() req) {
+    const access =  await this.authService.refreshToken(req.user.id);
+    
+    return {
+      accessToken : access
+    }
+  }
+
 
    //SIGNUP && LOGIN GOOGLE
   @Get('google/login')

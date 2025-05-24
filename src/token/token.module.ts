@@ -11,12 +11,7 @@ import { UsersModule } from 'src/domain/users/users.module';
     ConfigModule,
     UsersModule,
     JwtModule.registerAsync ({
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('DATASOURCE_JWT_ACCESS_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('DATASOURCE_JWT_ACCESS_EXPIRES_IN')
-        }
-      }),
+      useFactory: async (configService: ConfigService) => ({}),
       inject: [ConfigService],
     }),
     MongooseModule.forFeature([

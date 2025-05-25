@@ -33,7 +33,7 @@ export class AuthService {
     // send email to verify account
     if (user.verified === false) {
       // generate and send verification token
-      const token = await this.tokenService.generateEmailToken(user._id);
+      const token = await this.tokenService.generateAndUpdateverifyToken(user._id);
       await this.mailService.sendVerificationEmail(user.email, token);
     }
 
@@ -55,7 +55,7 @@ export class AuthService {
       throw new NotFoundException('User with this email does not exist');
     if (user.verified)
       throw new BadRequestException('Email is already verified');
-    const token = await this.tokenService.generateEmailToken(user._id);
+    const token = await this.tokenService.generateAndUpdateverifyToken(user._id);
     console.log(token);
 
     await this.mailService.sendVerificationEmail(user.email, token);
@@ -91,6 +91,8 @@ export class AuthService {
   async login(userId: Types.ObjectId) {
     const accessToken = await this.tokenService.generateAccessToken(userId);
     const refreshToken = await this.tokenService.generateRefreshToken(userId);
+    const hashedRefreshToken = await argon2.hash(refreshToken);
+    await this.tokenService.updateRefreshTokenInDataBase(userId, hashedRefreshToken);
     return { access: accessToken, refresh: refreshToken };
   }
 

@@ -12,6 +12,7 @@ import { Model, Types } from 'mongoose';
 import { UsersService } from 'src/domain/users/users.service';
 import { VerifyEmailDto } from 'src/domain/auth/dtos/verify-email.dto';
 import { AuthJwtPayload } from './models/auth-jwt-payload.type';
+import { RefreshToken } from './schemas/refresh-token.schema';
 
 @Injectable()
 export class TokenService {
@@ -20,23 +21,15 @@ export class TokenService {
     private readonly config: ConfigService,
     private readonly userService: UsersService,
     @InjectModel(VerifyToken.name) private verifyTokenModel: Model<VerifyToken>,
+    @InjectModel(RefreshToken.name)
+    private refreshTokenModel: Model<VerifyToken>,
   ) {}
 
   // #generating tokens
-  async generateEmailToken(userId: Types.ObjectId): Promise<string> {
+  async generateAndUpdateverifyToken(userId: Types.ObjectId): Promise<string> {
     const token = uuidv4();
 
-    await this.verifyTokenModel.updateOne(
-      { userId },
-      {
-        $set: {
-          token,
-          createdAt: new Date(),
-        },
-      },
-      { upsert: true },
-    );
-
+    await this.verifyTokenModel.updateOne({ userId }, { upsert: true });
     return token;
   }
 
@@ -54,10 +47,21 @@ export class TokenService {
     const payload: AuthJwtPayload = { sub: userId };
     const token = this.jwtService.sign(payload, {
       secret: this.config.get<string>('DATASOURCE_JWT_REFRESH_SECRET'),
-      expiresIn: this.config.get<string>('DATASOURCE_JWT_REFRESH_EXPIRES_IN')
-      
+      expiresIn: this.config.get<string>('DATASOURCE_JWT_REFRESH_EXPIRES_IN'),
     });
     return token;
+  }
+
+  async updateRefreshTokenInDataBase(
+    userId: Types.ObjectId,
+    hashedToken: string,
+  ): Promise<void> {
+    await this.refreshTokenModel.findOneAndUpdate(
+      { userId },
+      { hashedToken},
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+    // should return?
   }
 
   //  #veryfing tokens

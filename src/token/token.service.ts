@@ -25,6 +25,14 @@ export class TokenService {
     private refreshTokenModel: Model<VerifyToken>,
   ) {}
 
+  // utils
+  async findByUserId(userId: Types.ObjectId) {
+    return await this.refreshTokenModel.findOne({
+    userId: new Types.ObjectId(userId),
+  });
+    
+  }
+
   // #generating tokens
   async generateAndUpdateverifyToken(userId: Types.ObjectId): Promise<string> {
     const token = uuidv4();
@@ -57,11 +65,10 @@ export class TokenService {
     hashedToken: string,
   ): Promise<void> {
     await this.refreshTokenModel.findOneAndUpdate(
-      { userId },
-      { hashedToken},
-      { upsert: true, new: true, setDefaultsOnInsert: true },
-    );
-    // should return?
+  { userId: new Types.ObjectId(userId) },
+  { hashedToken },
+  { upsert: true }
+);
   }
 
   //  #veryfing tokens

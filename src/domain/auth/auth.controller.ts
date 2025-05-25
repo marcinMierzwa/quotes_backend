@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request, Res, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  Request,
+  Res,
+  Req,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dtos/sign-up.dto';
@@ -7,13 +18,12 @@ import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  //SIGNUP 
+  //SIGNUP
 
   @Post('signup')
   async createUser(@Body() signUpDto: SignUpDto) {
@@ -31,15 +41,39 @@ export class AuthController {
 
   @Post('resend-verification')
   async resendVerification(@Body() body: ResendDto) {
-    return await this.authService.resendVerification(body.email)
+    return await this.authService.resendVerification(body.email);
   }
 
-  // LOGIN 
+  // LOGIN
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req, @Res({ passthrough: true }) response: Response,) {
+  async login(@Request() req, @Res({ passthrough: true }) response: Response) {
     const tokens = await this.authService.login(req.user.id);
+
+    response.cookie('refreshToken', tokens.refresh, {
+      httpOnly: true,
+      secure: false, // change to true on production
+      sameSite: 'lax',
+      path: '/', // if only for /auth/refresh
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+    });
+
+    return {
+      accessToken: tokens.access,
+      message: 'Successful login!',
+    };
+  }
+
+  // REFRESH
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(RefreshAuthGuard)
+  @Post('refresh')
+  async refreshToken(
+    @Req() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const tokens = await this.authService.refreshToken(req.user.id);
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
@@ -49,37 +83,17 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
 
     });
-
     return {
       accessToken: tokens.access,
-      message: 'Successful login!'
     };
-    
   }
 
-  // REFRESH 
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(RefreshAuthGuard)
-  @Post('refresh')
-  async refreshToken(@Req() req) {
-    const access =  await this.authService.refreshToken(req.user.id);
-    
-    return {
-      accessToken : access
-    }
-  }
-
-
-   //SIGNUP && LOGIN GOOGLE
+  //SIGNUP && LOGIN GOOGLE
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
-  async googleLogin() {
-  }
+  async googleLogin() {}
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleCalback() {
-
-  }
-
+  async googleCalback() {}
 }

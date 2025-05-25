@@ -98,7 +98,20 @@ export class AuthService {
 
   //REFRESH
   async refreshToken(userId: Types.ObjectId) {
-    return await this.tokenService.generateAccessToken(userId);
+    const accessToken = await this.tokenService.generateAccessToken(userId);
+    const refreshToken = await this.tokenService.generateRefreshToken(userId);
+    const hashedRefreshToken = await argon2.hash(refreshToken);
+    await this.tokenService.updateRefreshTokenInDataBase(userId, hashedRefreshToken);
+    return { access: accessToken, refresh: refreshToken };
+  }
+
+  async validateRefreshToken(userId: Types.ObjectId, refreshTokenFromRequest: string) {
+    const refreshTokenFromDataBase = await this.tokenService.findByUserId(userId);
+    const hashedTokenFromDataBase = refreshTokenFromDataBase.get('hashedToken');
+    if(!refreshTokenFromDataBase) throw new UnauthorizedException('Invalid Refresh Token');
+    const refreshTokensMatches = await argon2.verify(hashedTokenFromDataBase, refreshTokenFromRequest)
+    if(!refreshTokensMatches) throw new UnauthorizedException('Invalid Refresh Token');
+    return { id : userId };
   }
 
   //SIGN_UP_&&_LOGIN_GOOGLE

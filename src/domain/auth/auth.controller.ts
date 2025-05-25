@@ -18,6 +18,7 @@ import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -81,7 +82,6 @@ export class AuthController {
       sameSite: 'lax',
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-
     });
     return {
       accessToken: tokens.access,
@@ -96,4 +96,19 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleCalback() {}
+
+  //LOGOUT
+
+  @Post('logout')
+  @UseGuards(RefreshAuthGuard)
+  async logout(@Req() req, @Res({ passthrough: true }) response: Response) {
+
+    response.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+   return await this.authService.logout(req.user.id);
+  }
 }

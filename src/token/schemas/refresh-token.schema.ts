@@ -9,8 +9,8 @@ export class RefreshToken {
   @Prop({ required: true, type: Types.ObjectId })
   userId: Types.ObjectId;
 
-  @Prop({ required: true })
-  hashedToken: string;
+  @Prop({ default: null })
+  hashedToken: string | null;
 }
 
 export const RefreshTokenSchema = SchemaFactory.createForClass(RefreshToken);

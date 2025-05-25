@@ -128,4 +128,12 @@ export class AuthService {
       await this.userService.verifyUser({ _id, verified });
     }
   }
+
+  //LOGOUT
+  async logout(userId: Types.ObjectId) {
+    await this.tokenService.updateRefreshTokenInDataBase(userId, null);
+    return {
+      message: 'User successfuly logout!'
+    }
+  }
 }

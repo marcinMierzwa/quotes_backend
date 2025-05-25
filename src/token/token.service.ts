@@ -62,10 +62,10 @@ export class TokenService {
 
   async updateRefreshTokenInDataBase(
     userId: Types.ObjectId,
-    hashedToken: string,
-  ): Promise<void> {
-    await this.refreshTokenModel.findOneAndUpdate(
-  { userId: new Types.ObjectId(userId) },
+    hashedToken: string | null,
+  ) {
+   return await this.refreshTokenModel.findOneAndUpdate(
+  { userId: new Types.ObjectId(userId)},
   { hashedToken },
   { upsert: true }
 );

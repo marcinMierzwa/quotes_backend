@@ -9,10 +9,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { VerifyToken } from './schemas/verify-token.schema';
 import { Model, Types } from 'mongoose';
-import { UsersService } from 'src/domain/users/users.service';
-import { VerifyEmailDto } from 'src/domain/auth/dtos/verify-email.dto';
 import { AuthJwtPayload } from './models/auth-jwt-payload.type';
 import { RefreshToken } from './schemas/refresh-token.schema';
+import { VerifyEmailDto } from '../domain/auth/dtos/verify-email.dto';
+import { UsersService } from '../domain/users/users.service';
 
 @Injectable()
 export class TokenService {

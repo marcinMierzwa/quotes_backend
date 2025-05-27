@@ -4,8 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { VerifyToken, VerifyTokenSchema } from './schemas/verify-token.schema';
-import { UsersModule } from 'src/domain/users/users.module';
 import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema';
+import { UsersModule } from '../domain/users/users.module';
 
 @Module({
   imports:[

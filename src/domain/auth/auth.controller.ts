@@ -18,7 +18,6 @@ import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {

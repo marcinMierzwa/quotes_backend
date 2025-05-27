@@ -7,11 +7,11 @@ import { MailModule } from 'src/mail/mail.module';
 import { TokenModule } from 'src/token/token.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { RefrehJwtStrategy } from './strategies/refresh.strategy';
+import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, GoogleStrategy, JwtStrategy, RefrehJwtStrategy],
+  providers: [AuthService, LocalStrategy, GoogleStrategy, JwtStrategy, RefreshJwtStrategy],
   imports: [UsersModule, MailModule, TokenModule]
 })
 export class AuthModule {}

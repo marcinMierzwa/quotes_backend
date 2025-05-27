@@ -8,9 +8,9 @@ import { UsersService } from '../users/users.service';
 import { SignUpDto } from './dtos/sign-up.dto';
 import { ObjectId, Types } from 'mongoose';
 import { MailService } from 'src/mail/mail.service';
-import { TokenService } from 'src/token/token.service';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
 import * as argon2 from 'argon2';
+import { TokenService } from 'src/token/token.service';
 
 @Injectable()
 export class AuthService {

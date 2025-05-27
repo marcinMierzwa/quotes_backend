@@ -7,7 +7,7 @@ import { AuthJwtPayload } from 'src/token/models/auth-jwt-payload.type';
 import { Request } from 'express';
 
 @Injectable()
-export class RefrehJwtStrategy extends PassportStrategy(Strategy, 'refresh-jwt') {
+export class RefreshJwtStrategy extends PassportStrategy(Strategy, 'refresh-jwt') {
   constructor(
     private authService: AuthService,
     private configService: ConfigService,

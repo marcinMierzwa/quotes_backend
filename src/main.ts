@@ -10,6 +10,8 @@ async function bootstrap() {
 
   const clientUrls = [
     configService.get<string>('DATASOURCE_PROD_CLIENT_URL'),
+        configService.get<string>('DATASOURCE_DEV_CLIENT_URL'),
+
   ].filter(Boolean); 
 
   app.use(cookieParser());

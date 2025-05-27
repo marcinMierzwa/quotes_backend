@@ -10,7 +10,6 @@ async function bootstrap() {
 
   const clientUrls = [
     configService.get<string>('DATASOURCE_PROD_CLIENT_URL'),
-    configService.get<string>('DATASOURCE_DEV_CLIENT_URL'),
   ].filter(Boolean); 
 
   app.use(cookieParser());
@@ -21,7 +20,6 @@ async function bootstrap() {
   });
 
   await app.listen(port);
-  console.log(`🚀 Server is running on http://localhost:${port}`);
 }
 
 bootstrap();

@@ -53,8 +53,8 @@ export class AuthController {
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
-      secure: false, // change to true on production
-      sameSite: 'lax',
+      secure: true, // change to true on production
+      sameSite: 'none',
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     });
@@ -77,8 +77,8 @@ export class AuthController {
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
-      secure: false, // change to true on production
-      sameSite: 'lax',
+      secure: true, // change to true on production
+      sameSite: 'none',
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     });

@@ -34,7 +34,7 @@ export class TokenService {
   }
 
   // #generating tokens
-  async generateAndUpdateverifyToken(userId: Types.ObjectId): Promise<string> {
+  async generateAndUpdateVerifyToken(userId: Types.ObjectId): Promise<string> {
     const token = uuidv4();
 
     await this.verifyTokenModel.updateOne({ userId }, { upsert: true });

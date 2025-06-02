@@ -70,6 +70,7 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new UnauthorizedException('Sorry, user not found!');
+    if (!user.password) throw new UnauthorizedException('Invalid Credentails')
     const isPasswordMatch = await argon2.verify(user.password, password);
     if (!isPasswordMatch)
       throw new UnauthorizedException('Invalid Credentials!');
@@ -120,13 +121,14 @@ export class AuthService {
     const verified = true;
     if (!user) {
       user = await this.userService.createUser({ email, verified });
-      await this.mailService.sendWelcomeEmail(user.email)!!!!!!!!!!!!!!!!!!!;
+      // await this.mailService.sendWelcomeEmail(user.email);
       // send email to welcome new user
     }
     if (user.verified === false) {
       const _id: ObjectId = user.id;
       await this.userService.verifyUser({ _id, verified });
     }
+    return user
   }
 
   //LOGOUT

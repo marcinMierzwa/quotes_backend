@@ -110,7 +110,6 @@ export class AuthController {
       sameSite: 'none', // change to lax on production
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      domain: '.vercel.app', 
     });
 
     // return {
@@ -133,22 +132,21 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
       path: '/',
-      domain: '.vercel.app', 
     });
    return await this.authService.logout(req.user.id);
   }
 
   // NOWY, TYMCZASOWY ENDPOINT DO DEBUGOWANIA
-  @Get('debug/env')
-  debugEnv() {
-    const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
-    const devClientUrl = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
+  // @Get('debug/env')
+  // debugEnv() {
+  //   const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
+  //   const devClientUrl = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
 
-    return {
-      message: 'Debugowanie zmiennych środowiskowych i CORS',
-      prodClientUrl: prodClientUrl || 'NIE ZNALEZIONO!',
-      devClientUrl: devClientUrl || 'NIE ZNALEZIONO!',
-      finalCorsOrigins: [prodClientUrl, devClientUrl].filter(Boolean)
-    };
-  }
+  //   return {
+  //     message: 'Debugowanie zmiennych środowiskowych i CORS',
+  //     prodClientUrl: prodClientUrl || 'NIE ZNALEZIONO!',
+  //     devClientUrl: devClientUrl || 'NIE ZNALEZIONO!',
+  //     finalCorsOrigins: [prodClientUrl, devClientUrl].filter(Boolean)
+  //   };
+  // }
 }

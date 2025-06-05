@@ -101,7 +101,7 @@ export class AuthController {
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
       secure: false, // change to true on production
-      sameSite: 'lax',
+      sameSite: 'lax', // change to false on production
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     });
@@ -110,7 +110,7 @@ export class AuthController {
     //   accessToken: tokens.access,
     //   message: 'Successful login!',
     // };
-    const redirectUrl = 'http://localhost:4200/home';
+    const redirectUrl = 'http://localhost:4200/home'; //  https://quotesfrontend.vercel.app/home  change on production
 
      return response.redirect(redirectUrl);
   }

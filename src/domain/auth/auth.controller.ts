@@ -53,8 +53,8 @@ export class AuthController {
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
-      secure: true, // change to true on production
-      sameSite: 'none',
+      secure: true, // change to false on dev
+      sameSite: 'none', 
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     });
@@ -77,8 +77,8 @@ export class AuthController {
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
-      secure: true, // change to true on production
-      sameSite: 'none',
+      secure: true, // change to false on dev
+      sameSite: 'none', 
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     });
@@ -100,8 +100,8 @@ export class AuthController {
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
-      secure: false, // change to true on production
-      sameSite: 'lax', // change to false on production
+      secure: true, // change to false on production
+      sameSite: 'lax', // change to lax on production
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     });
@@ -110,8 +110,8 @@ export class AuthController {
     //   accessToken: tokens.access,
     //   message: 'Successful login!',
     // };
-    const redirectUrl = 'http://localhost:4200/home'; //  https://quotesfrontend.vercel.app/home  change on production
-
+    // const redirectUrl = 'http://localhost:4200/home'; //   change on production
+    const redirectUrl = 'https://quotesfrontend.vercel.app/home'; //    change on development
      return response.redirect(redirectUrl);
   }
 

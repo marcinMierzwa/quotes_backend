@@ -92,9 +92,28 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleLogin() {}
 
+  @HttpCode(HttpStatus.OK)
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleCalback() {}
+  async googleCalback(@Request() req, @Res({ passthrough: true }) response: Response) {
+    const tokens = await this.authService.login(req.user.id);
+
+    response.cookie('refreshToken', tokens.refresh, {
+      httpOnly: true,
+      secure: false, // change to true on production
+      sameSite: 'lax', // change to false on production
+      path: '/', // if only for /auth/refresh
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+    });
+
+    // return {
+    //   accessToken: tokens.access,
+    //   message: 'Successful login!',
+    // };
+    const redirectUrl = 'http://localhost:4200/home'; //  https://quotesfrontend.vercel.app/home  change on production
+
+     return response.redirect(redirectUrl);
+  }
 
   //LOGOUT
 

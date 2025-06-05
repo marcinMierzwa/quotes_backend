@@ -18,10 +18,13 @@ import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService,
+  private configService: ConfigService) {}
+  
 
   //SIGNUP
 
@@ -97,9 +100,6 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleCalback(@Request() req, @Res({ passthrough: true }) response: Response) {
 
- console.log('--- Google Callback Invoked ---'); // <--- DODAJ LOG
-  console.log('Request user from Google:', req.user); // <--- DODAJ LOG
-
     const tokens = await this.authService.login(req.user.id);
     
     
@@ -136,5 +136,19 @@ export class AuthController {
       domain: '.vercel.app', 
     });
    return await this.authService.logout(req.user.id);
+  }
+
+  // NOWY, TYMCZASOWY ENDPOINT DO DEBUGOWANIA
+  @Get('debug/env')
+  debugEnv() {
+    const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
+    const devClientUrl = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
+
+    return {
+      message: 'Debugowanie zmiennych środowiskowych i CORS',
+      prodClientUrl: prodClientUrl || 'NIE ZNALEZIONO!',
+      devClientUrl: devClientUrl || 'NIE ZNALEZIONO!',
+      finalCorsOrigins: [prodClientUrl, devClientUrl].filter(Boolean)
+    };
   }
 }

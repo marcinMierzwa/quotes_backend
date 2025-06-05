@@ -100,7 +100,7 @@ export class AuthController {
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
-      secure: true, // change to false on production
+      secure: true, // change to false on dev
       sameSite: 'lax', // change to lax on production
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week

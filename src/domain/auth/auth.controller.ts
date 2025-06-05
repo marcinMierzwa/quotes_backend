@@ -96,7 +96,13 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleCalback(@Request() req, @Res({ passthrough: true }) response: Response) {
+
+ console.log('--- Google Callback Invoked ---'); // <--- DODAJ LOG
+  console.log('Request user from Google:', req.user); // <--- DODAJ LOG
+
     const tokens = await this.authService.login(req.user.id);
+    
+    
 
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,

@@ -121,7 +121,7 @@ export class AuthService {
     const verified = true;
     if (!user) {
       user = await this.userService.createUser({ email, verified });
-      // await this.mailService.sendWelcomeEmail(user.email);
+      await this.mailService.sendWelcomeEmail(user.email);
       // send email to welcome new user
     }
     if (user.verified === false) {

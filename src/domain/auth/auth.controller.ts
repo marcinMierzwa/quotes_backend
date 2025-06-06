@@ -19,7 +19,6 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { ConfigService } from '@nestjs/config';
-import { FacebookAuthGuard } from './guards/facebook-auth-guard/facebook-auth-guard.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -118,18 +117,6 @@ export class AuthController {
      return response.redirect(redirectUrl);
   }
 
-  //SIGNUP && LOGIN FACEBOOK
-  @Get('facebook/login')
-  @UseGuards(FacebookAuthGuard)
-  async facebookLogin() {}
-
-  @HttpCode(HttpStatus.OK)
-  @Get('facebook/callback')
-  @UseGuards(FacebookAuthGuard)
-  async facebookCallback(@Req() req) {
-    console.log(req.user.id);
-    
-  }
 
   //LOGOUT
 

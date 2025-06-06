@@ -133,7 +133,8 @@ export class AuthController {
    return await this.authService.logout(req.user.id);
   }
 
-  //ENDPOINT TO DEBUG VERCEL
+  // ENDPOINT TO DEBUG VERCEL
+  // https://quotesfrontend.vercel.app/auth/debug/env
   @Get('debug/env')
   debugEnv() {
     const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');

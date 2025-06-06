@@ -19,6 +19,7 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { ConfigService } from '@nestjs/config';
+import { FacebookAuthGuard } from './guards/facebook-auth-guard/facebook-auth-guard.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -107,18 +108,27 @@ export class AuthController {
     response.cookie('refreshToken', tokens.refresh, {
       httpOnly: true,
       secure: true, // change to false on dev
-      sameSite: 'none', // change to lax on production
+      sameSite: 'none', 
       path: '/', // if only for /auth/refresh
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     });
 
-    // return {
-    //   accessToken: tokens.access,
-    //   message: 'Successful login!',
-    // };
     // const redirectUrl = 'http://localhost:4200/home'; //   change on production
     const redirectUrl = 'https://quotesfrontend.vercel.app/home'; //    change on development
      return response.redirect(redirectUrl);
+  }
+
+  //SIGNUP && LOGIN FACEBOOK
+  @Get('facebook/login')
+  @UseGuards(FacebookAuthGuard)
+  async facebookLogin() {}
+
+  @HttpCode(HttpStatus.OK)
+  @Get('facebook/callback')
+  @UseGuards(FacebookAuthGuard)
+  async facebookCallback(@Req() req) {
+    console.log(req.user.id);
+    
   }
 
   //LOGOUT

@@ -8,10 +8,11 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 import { TokenModule } from '../../token/token.module';
 import { MailModule } from '../../mail/mail.module';
+import { FacebookStrategy } from './strategies/facebook.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, GoogleStrategy, JwtStrategy, RefreshJwtStrategy],
+  providers: [AuthService, LocalStrategy, GoogleStrategy, JwtStrategy, RefreshJwtStrategy, FacebookStrategy],
   imports: [UsersModule, MailModule, TokenModule]
 })
 export class AuthModule {}

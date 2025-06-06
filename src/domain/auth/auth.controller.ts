@@ -134,13 +134,16 @@ export class AuthController {
   }
 
   // ENDPOINT TO DEBUG VERCEL
-  // https://quotesfrontend.vercel.app/auth/debug/env
+  //https://quotes-backend-nine.vercel.app/auth/debug/env
   @Get('debug/env')
   debugEnv() {
     // const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
     // const devClientUrl = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
     const devMode = this.configService.get<string>('NODE_ENV')
     console.log(devMode);
+    return {
+      devmode: devMode
+    }
     
 
   }

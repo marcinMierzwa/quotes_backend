@@ -133,17 +133,13 @@ export class AuthController {
    return await this.authService.logout(req.user.id);
   }
 
-  // NOWY, TYMCZASOWY ENDPOINT DO DEBUGOWANIA
-  // @Get('debug/env')
-  // debugEnv() {
-  //   const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
-  //   const devClientUrl = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
+  //ENDPOINT TO DEBUG VERCEL
+  @Get('debug/env')
+  debugEnv() {
+    const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
+    const devClientUrl = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
+    const devMode = this.configService.get<string>('NODE_ENV')
 
-  //   return {
-  //     message: 'Debugowanie zmiennych środowiskowych i CORS',
-  //     prodClientUrl: prodClientUrl || 'NIE ZNALEZIONO!',
-  //     devClientUrl: devClientUrl || 'NIE ZNALEZIONO!',
-  //     finalCorsOrigins: [prodClientUrl, devClientUrl].filter(Boolean)
-  //   };
-  // }
+
+  }
 }

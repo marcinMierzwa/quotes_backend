@@ -8,10 +8,12 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 import { TokenModule } from '../../token/token.module';
 import { MailModule } from '../../mail/mail.module';
+import { CookieOptionsService } from './cookie-options.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, GoogleStrategy, JwtStrategy, RefreshJwtStrategy],
-  imports: [UsersModule, MailModule, TokenModule]
+  providers: [AuthService, LocalStrategy, GoogleStrategy, JwtStrategy, RefreshJwtStrategy, CookieOptionsService],
+  imports: [UsersModule, MailModule, TokenModule],
+  exports: [CookieOptionsService]
 })
 export class AuthModule {}

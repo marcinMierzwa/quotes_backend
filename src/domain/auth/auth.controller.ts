@@ -19,12 +19,15 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { ConfigService } from '@nestjs/config';
+import { CookieOptionsService } from './cookie-options.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService,
-  private configService: ConfigService) {}
-  
+  constructor(
+    private readonly authService: AuthService,
+    private configService: ConfigService,
+    private cookieService: CookieOptionsService,
+  ) {}
 
   //SIGNUP
 
@@ -53,14 +56,7 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res({ passthrough: true }) response: Response) {
     const tokens = await this.authService.login(req.user.id);
-
-    response.cookie('refreshToken', tokens.refresh, {
-      httpOnly: true,
-      secure: true, // change to false on dev
-      sameSite: 'none', 
-      path: '/', // if only for /auth/refresh
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-    });
+    response.cookie('refreshToken', tokens.refresh, this.cookieService.getRefreshTokenOptions());
 
     return {
       accessToken: tokens.access,
@@ -78,13 +74,8 @@ export class AuthController {
   ) {
     const tokens = await this.authService.refreshToken(req.user.id);
 
-    response.cookie('refreshToken', tokens.refresh, {
-      httpOnly: true,
-      secure: true, // change to false on dev
-      sameSite: 'none', 
-      path: '/', // if only for /auth/refresh
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-    });
+    response.cookie('refreshToken', tokens.refresh, this.cookieService.getRefreshTokenOptions());
+
     return {
       accessToken: tokens.access,
     };
@@ -98,54 +89,39 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleCalback(@Request() req, @Res({ passthrough: true }) response: Response) {
-
+  async googleCalback(
+    @Request() req,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const tokens = await this.authService.login(req.user.id);
-    
-    
 
-    response.cookie('refreshToken', tokens.refresh, {
-      httpOnly: true,
-      secure: true, // change to false on dev
-      sameSite: 'none', 
-      path: '/', // if only for /auth/refresh
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-    });
+    response.cookie('refreshToken', tokens.refresh, this.cookieService.getRefreshTokenOptions());
 
-    // const redirectUrl = 'http://localhost:4200/home'; //   change on production
-    const redirectUrl = 'https://quotesfrontend.vercel.app/home'; //    change on development
-     return response.redirect(redirectUrl);
+    const isProd = this.configService.get<string>('NODE_ENV') === 'production';
+    const prodRedirect = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
+    const devRedirect = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
+    const redirectUrl = isProd ? prodRedirect : devRedirect;
+    return response.redirect(redirectUrl);
   }
-
 
   //LOGOUT
 
   @Post('logout')
   @UseGuards(RefreshAuthGuard)
   async logout(@Req() req, @Res({ passthrough: true }) response: Response) {
-
-    response.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
-      path: '/',
-    });
-   return await this.authService.logout(req.user.id);
+    response.clearCookie('refreshToken',  this.cookieService.getRefreshTokenLogoutOptions());
+    return await this.authService.logout(req.user.id);
   }
 
   // ENDPOINT TO DEBUG VERCEL
   //https://quotes-backend-nine.vercel.app/auth/debug/env
   //http://localhost:3000/auth/debug/env
-  @Get('debug/env')
-  debugEnv() {
-    // const prodClientUrl = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
-    // const devClientUrl = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
-    const devMode = this.configService.get<string>('NODE_ENV')
-    console.log(devMode);
-    return {
-      devmode: devMode
-    }
-    
-
-  }
+  // @Get('debug/env')
+  // debugEnv() {
+  //   const devMode = this.configService.get<string>('NODE_ENV');
+  //   console.log(devMode);
+  //   return {
+  //     devmode: devMode,
+  //   };
+  // }
 }

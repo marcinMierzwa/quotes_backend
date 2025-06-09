@@ -28,15 +28,25 @@ export class TokenService {
   // utils
   async findByUserId(userId: Types.ObjectId) {
     return await this.refreshTokenModel.findOne({
-    userId: new Types.ObjectId(userId),
-  });
-    
+      userId: new Types.ObjectId(userId),
+    });
   }
 
   // #generating tokens
   async generateAndUpdateVerifyToken(userId: Types.ObjectId): Promise<string> {
     const token = uuidv4();
-    await this.verifyTokenModel.updateOne({ userId }, {token}, { upsert: true });
+    await this.verifyTokenModel.updateOne(
+      { userId },
+      { token },
+      { upsert: true },
+    );
+    return token;
+  }
+
+  async generateAndSaveResetToken(userId: Types.ObjectId): Promise<string> {
+    const token = uuidv4();
+    console.log(userId, token);
+    
     return token;
   }
 
@@ -63,11 +73,11 @@ export class TokenService {
     userId: Types.ObjectId,
     hashedToken: string | null,
   ) {
-   return await this.refreshTokenModel.findOneAndUpdate(
-  { userId: new Types.ObjectId(userId)},
-  { hashedToken },
-  { upsert: true }
-);
+    return await this.refreshTokenModel.findOneAndUpdate(
+      { userId: new Types.ObjectId(userId) },
+      { hashedToken },
+      { upsert: true },
+    );
   }
 
   //  #veryfing tokens
@@ -90,7 +100,7 @@ export class TokenService {
     // validate user
     const user = await this.userService.findById(tokenDoc.userId);
     if (!user) {
-      throw new NotFoundException('Sorry, User not found');
+      throw new NotFoundException('Invalid Credentials!');
     }
 
     if (user.verified) {

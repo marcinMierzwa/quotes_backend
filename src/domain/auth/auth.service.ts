@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -11,6 +12,8 @@ import { VerifyEmailDto } from './dtos/verify-email.dto';
 import * as argon2 from 'argon2';
 import { MailService } from '../../mail/mail.service';
 import { TokenService } from '../../token/token.service';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
+import { use } from 'passport';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +28,7 @@ export class AuthService {
     const { email, password } = signUpDto;
     const userInDataBase = await this.userService.findByEmail(email);
     if (userInDataBase) {
-      throw new UnauthorizedException('Sorry, email is already in use!');
+      throw new ConflictException('Sorry, email is already in use!');
     }
     const user = await this.userService.createUser(signUpDto);
     // send email to welcome
@@ -69,8 +72,8 @@ export class AuthService {
   //LOGIN LOCAL
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
-    if (!user) throw new UnauthorizedException('Sorry, user not found!');
-    if (!user.password) throw new UnauthorizedException('Invalid Credentails')
+    if (!user) throw new UnauthorizedException('Invalid credentials!');
+    if (!user.password) throw new UnauthorizedException('This account was created using a social login. Please log in with Google or use the "Forgot Password" feature to set a password.')
     const isPasswordMatch = await argon2.verify(user.password, password);
     if (!isPasswordMatch)
       throw new UnauthorizedException('Invalid Credentials!');
@@ -114,6 +117,20 @@ export class AuthService {
     if(!refreshTokensMatches) throw new UnauthorizedException('Invalid Refresh Token');
     return { id : userId };
   }
+
+  //FORGOT PASSWORD
+  async forgotPassword(body: ForgotPasswordDto) {
+    const {email} = body;
+    const user = await this.userService.findByEmail(email);
+    if(user) {
+      const token = await this.tokenService.generateAndSaveResetToken(user._id);
+      await this.mailService.sendResetPasswordEmail(email, token);
+    }
+    return {
+        message: "If an account with that email exists, a password reset link has been sent."
+      }
+  }
+  //RESET PASSWORD
 
   //SIGN_UP_&&_LOGIN_GOOGLE
   async validateGoogleUser(email: string) {

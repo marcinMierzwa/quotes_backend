@@ -20,6 +20,7 @@ import { ResendDto } from './dtos/resend-verification.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { ConfigService } from '@nestjs/config';
 import { CookieOptionsService } from './cookie-options.service';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -80,6 +81,14 @@ export class AuthController {
       accessToken: tokens.access,
     };
   }
+
+  // FORGOT PASSWORD
+  @Post('forgot-password')
+  forgotPassword(@Body() body: ForgotPasswordDto) {
+    return this.authService.forgotPassword(body);
+  }
+
+  // RESET PASSWORD
 
   //SIGNUP && LOGIN GOOGLE
   @Get('google/login')

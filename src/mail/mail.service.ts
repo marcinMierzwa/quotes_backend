@@ -19,7 +19,7 @@ export class MailService {
     const subject = 'Verify your email address';
     const html = `
       <p>Click the link below to verify your email address</p>
-      <a href="http://localhost:4200/verify?token=${token}">Click this link to verify your email address</a>
+      <a href="https://quotesfrontend.vercel.app/verify?token=${token}">Click this link to verify your email address</a>
     `;
 
     return this.resendService.sendEmail({ to, subject, html });
@@ -38,7 +38,7 @@ export class MailService {
           <p>We received a request to reset the password for your account on <strong>Magic Movie Quotes</strong>. If you made this request, please click the button below to set a new password.</p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="http://localhost:4200/reset-password?token=${token}" style="background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            <a href="https://quotesfrontend.vercel.app/reset-password?token=${token}" style="background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
               Reset Your Password
             </a>
           </div>
@@ -63,7 +63,7 @@ export class MailService {
 
   async sendResetPasswordConfirmationEmail(to: string) {
     const subject = 'Security Alert: Your Magic Movie Quotes Password Was Changed';
-    const secureAccountUrl = 'http://localhost:4200/forgot-password';
+    const secureAccountUrl = 'https://quotesfrontend.vercel.app/forgot-password';
 
 const html = `
   <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">

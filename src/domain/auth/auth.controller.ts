@@ -21,6 +21,7 @@ import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { ConfigService } from '@nestjs/config';
 import { CookieOptionsService } from './cookie-options.service';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -57,7 +58,11 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res({ passthrough: true }) response: Response) {
     const tokens = await this.authService.login(req.user.id);
-    response.cookie('refreshToken', tokens.refresh, this.cookieService.getRefreshTokenOptions());
+    response.cookie(
+      'refreshToken',
+      tokens.refresh,
+      this.cookieService.getRefreshTokenOptions(),
+    );
 
     return {
       accessToken: tokens.access,
@@ -75,7 +80,11 @@ export class AuthController {
   ) {
     const tokens = await this.authService.refreshToken(req.user.id);
 
-    response.cookie('refreshToken', tokens.refresh, this.cookieService.getRefreshTokenOptions());
+    response.cookie(
+      'refreshToken',
+      tokens.refresh,
+      this.cookieService.getRefreshTokenOptions(),
+    );
 
     return {
       accessToken: tokens.access,
@@ -84,11 +93,16 @@ export class AuthController {
 
   // FORGOT PASSWORD
   @Post('forgot-password')
-  forgotPassword(@Body() body: ForgotPasswordDto) {
-    return this.authService.forgotPassword(body);
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    return await this.authService.forgotPassword(body);
   }
 
   // RESET PASSWORD
+  @Post('reset-password')
+  async resetPassword(@Body() body: ResetPasswordDto) {
+    await this.authService.resetPasword(body);
+    return { message: 'Your password has been reset successfully.' };
+  }
 
   //SIGNUP && LOGIN GOOGLE
   @Get('google/login')
@@ -104,11 +118,19 @@ export class AuthController {
   ) {
     const tokens = await this.authService.login(req.user.id);
 
-    response.cookie('refreshToken', tokens.refresh, this.cookieService.getRefreshTokenOptions());
+    response.cookie(
+      'refreshToken',
+      tokens.refresh,
+      this.cookieService.getRefreshTokenOptions(),
+    );
 
     const isProd = this.configService.get<string>('NODE_ENV') === 'production';
-    const prodRedirect = this.configService.get<string>('DATASOURCE_PROD_CLIENT_URL');
-    const devRedirect = this.configService.get<string>('DATASOURCE_DEV_CLIENT_URL');
+    const prodRedirect = this.configService.get<string>(
+      'DATASOURCE_PROD_CLIENT_URL',
+    );
+    const devRedirect = this.configService.get<string>(
+      'DATASOURCE_DEV_CLIENT_URL',
+    );
     const redirectUrl = isProd ? prodRedirect : devRedirect;
     return response.redirect(redirectUrl);
   }
@@ -118,7 +140,10 @@ export class AuthController {
   @Post('logout')
   @UseGuards(RefreshAuthGuard)
   async logout(@Req() req, @Res({ passthrough: true }) response: Response) {
-    response.clearCookie('refreshToken',  this.cookieService.getRefreshTokenLogoutOptions());
+    response.clearCookie(
+      'refreshToken',
+      this.cookieService.getRefreshTokenLogoutOptions(),
+    );
     return await this.authService.logout(req.user.id);
   }
 

@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { VerifyToken, VerifyTokenSchema } from './schemas/verify-token.schema';
 import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema';
 import { UsersModule } from '../domain/users/users.module';
+import { ResetToken, ResetTokenSchema } from './schemas/reset-token.schema';
 
 @Module({
   imports:[
@@ -23,6 +24,10 @@ import { UsersModule } from '../domain/users/users.module';
     {
       name: RefreshToken.name,
       schema: RefreshTokenSchema
+    },
+    {
+      name: ResetToken.name,
+      schema: ResetTokenSchema
     }
   ])
   ],

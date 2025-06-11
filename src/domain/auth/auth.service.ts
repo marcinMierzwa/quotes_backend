@@ -14,6 +14,7 @@ import { MailService } from '../../mail/mail.service';
 import { TokenService } from '../../token/token.service';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { use } from 'passport';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -131,6 +132,13 @@ export class AuthService {
       }
   }
   //RESET PASSWORD
+  async resetPasword(body: ResetPasswordDto) {
+    const { token, password } = body;
+    const userId = await this.tokenService.verifyResetToken(token); 
+    const user = await this.userService.resetUserPassword(userId, password);
+    const email = user.email;
+    await this.mailService.sendResetPasswordConfirmationEmail(email);
+  }
 
   //SIGN_UP_&&_LOGIN_GOOGLE
   async validateGoogleUser(email: string) {

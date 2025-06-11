@@ -43,7 +43,7 @@ export class MailService {
             </a>
           </div>
           
-          <p>For your security, this link will expire in <strong>30 minutes</strong>.</p>
+          <p>For your security, this link will expire in <strong>15 minutes</strong>.</p>
           
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
           
@@ -59,6 +59,63 @@ export class MailService {
       </div>
     `;
     return this.resendService.sendEmail({ to, subject, html });
+  } 
+
+  async sendResetPasswordConfirmationEmail(to: string) {
+    const subject = 'Security Alert: Your Magic Movie Quotes Password Was Changed';
+    const secureAccountUrl = 'http://localhost:4200/forgot-password';
+
+const html = `
+  <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+      
+      <h2 style="color: #d9534f; text-align: center;">Security Alert: Password Changed</h2>
+      
+      <p>Hi ${to},</p>
+      
+      <p>This is a confirmation that the password for your <strong>Magic Movie Quotes</strong> account was successfully changed.</p>
+      
+      <div style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #d9534f; margin: 20px 0;">
+        <p style="margin: 0;"><strong>Details of the change:</strong></p>
+        <ul style="margin: 10px 0 0 20px; padding: 0;">
+          <li><strong>Date:</strong> ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</li>
+          <li><strong>Time:</strong> ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</li>
+        </ul>
+      </div>
+
+      <p>If you were the one who made this change, you can safely ignore this email. Your account is secure.</p>
+      
+      <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+      
+      <h3 style="color: #444; text-align: center;">Didn't Make This Change?</h3>
+      
+      <p style="font-size: 1.1em; text-align: center; color: #d9534f;">
+        <strong>If you did NOT change your password, your account may have been compromised.</strong>
+      </p>
+      
+      <p>Please take immediate action to secure your account by clicking the button below.</p>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${secureAccountUrl}" style="background-color: #d9534f; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          Secure Your Account Now
+        </a>
+      </div>
+      
+      <p style="font-size: 0.9em; color: #777;">
+        As a security precaution, we also recommend changing the password for your email account.
+      </p>
+      
+      <p style="font-size: 0.9em; color: #777;">
+        Thanks,<br>
+        The Magic Movie Quotes Team
+      </p>
+    </div>
+  </div>
+`;
+
+
+        return this.resendService.sendEmail({ to, subject, html });
+
   } 
 
 

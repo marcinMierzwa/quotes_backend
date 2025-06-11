@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -13,6 +14,7 @@ import { AuthJwtPayload } from './models/auth-jwt-payload.type';
 import { RefreshToken } from './schemas/refresh-token.schema';
 import { VerifyEmailDto } from '../domain/auth/dtos/verify-email.dto';
 import { UsersService } from '../domain/users/users.service';
+import { ResetToken } from './schemas/reset-token.schema';
 
 @Injectable()
 export class TokenService {
@@ -20,9 +22,13 @@ export class TokenService {
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
     private readonly userService: UsersService,
-    @InjectModel(VerifyToken.name) private verifyTokenModel: Model<VerifyToken>,
+    @InjectModel(VerifyToken.name) 
+    private verifyTokenModel: Model<VerifyToken>,
     @InjectModel(RefreshToken.name)
-    private refreshTokenModel: Model<VerifyToken>,
+    private refreshTokenModel: Model<RefreshToken>,
+    @InjectModel(ResetToken.name)
+    private resetTokenModel: Model<ResetToken>,
+
   ) {}
 
   // utils
@@ -45,8 +51,11 @@ export class TokenService {
 
   async generateAndSaveResetToken(userId: Types.ObjectId): Promise<string> {
     const token = uuidv4();
-    console.log(userId, token);
-    
+    await this.resetTokenModel.updateOne(
+      { userId },
+      { token },
+      { upsert: true },
+    );
     return token;
   }
 
@@ -120,5 +129,26 @@ export class TokenService {
       message:
         'Great! Email successfully verified, now you can log in and take full advantage of your account!',
     };
+  }
+
+  async verifyResetToken(token: string): Promise<Types.ObjectId> {
+    // validate token
+    const resetTokenDoc = await this.resetTokenModel.findOne({token});
+    if (!resetTokenDoc) {
+      throw new NotFoundException(
+        'Sorry, invalid or expired token',
+      );
+    }
+    const fifteenMinutesInMs = 15 * 60 * 1000;
+    const tokenAgeInMs = Date.now() - resetTokenDoc.createdAt.getTime();
+
+    if (tokenAgeInMs > fifteenMinutesInMs) {
+      await this.resetTokenModel.deleteOne({ _id: resetTokenDoc._id });
+      throw new UnauthorizedException('Invalid or expired token.');
+    }
+
+    await this.resetTokenModel.deleteOne({ _id: resetTokenDoc._id });
+    
+    return resetTokenDoc.userId;
   }
 }

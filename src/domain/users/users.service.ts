@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
 import { Model, Types } from 'mongoose';
@@ -9,7 +9,6 @@ import { UpadateVerified } from '../auth/models/update-verified.interface';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  //UTILS
 
   async findByEmail(email: string) {
     return await this.userModel.findOne({ email });
@@ -19,17 +18,27 @@ export class UsersService {
     return this.userModel.findById(id);
   }
 
-  //SIGN_UP
-
   async createUser(createUser: CreateUser) {
     return await this.userModel.create(createUser);
   }
+
+  async resetUserPassword(userId: Types.ObjectId, password: string): Promise<User> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+    user.password = password;
+    await user.save();
+    return user;
+  }
+  
 
   async verifyUser(updateVerified: UpadateVerified) {
     await this.userModel.updateOne(updateVerified);
   }
 
-  //GET USER
+
   async getUser(id: Types.ObjectId) {
     const user = await this.findById(id);
     return {

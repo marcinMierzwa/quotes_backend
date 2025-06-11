@@ -7,6 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('DATASOURCE_PORT') || 3000;
+  const devMode = configService.get<string>('NODE_ENV');
+  
+  
 
   const clientUrls = [
     configService.get<string>('DATASOURCE_PROD_CLIENT_URL'),
@@ -22,6 +25,9 @@ async function bootstrap() {
   });
 
   await app.listen(port);
+  if (devMode === 'development') {
+    console.log(`Server is running in ${devMode} mode, localHost:${port}` )
+  }
 }
 
 bootstrap();

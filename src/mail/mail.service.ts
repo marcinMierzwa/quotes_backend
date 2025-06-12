@@ -59,13 +59,15 @@ export class MailService {
       </div>
     `;
     return this.resendService.sendEmail({ to, subject, html });
-  } 
+  }
 
   async sendResetPasswordConfirmationEmail(to: string) {
-    const subject = 'Security Alert: Your Magic Movie Quotes Password Was Changed';
-    const secureAccountUrl = 'https://quotesfrontend.vercel.app/forgot-password';
+    const subject =
+      'Security Alert: Your Magic Movie Quotes Password Was Changed';
+    const secureAccountUrl =
+      'https://quotesfrontend.vercel.app/forgot-password';
 
-const html = `
+    const html = `
   <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
       
@@ -113,10 +115,6 @@ const html = `
   </div>
 `;
 
-
-        return this.resendService.sendEmail({ to, subject, html });
-
-  } 
-
-
+    return this.resendService.sendEmail({ to, subject, html });
+  }
 }

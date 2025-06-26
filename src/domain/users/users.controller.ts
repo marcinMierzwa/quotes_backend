@@ -9,6 +9,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getUser(@Req() req) {
-    return await this.usersService.getUser(req.user.id)
+    return await this.usersService.getUser(req.user.id);
   }
 }

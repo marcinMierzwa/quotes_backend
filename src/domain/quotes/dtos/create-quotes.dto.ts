@@ -1,5 +1,4 @@
-import { IsOptional, IsArray, IsMongoId, IsString } from 'class-validator';
-import { Types } from 'mongoose';
+import { IsString } from 'class-validator';
 
 export class CreateQuoteDto {
   @IsString()
@@ -20,9 +19,4 @@ export class CreateQuoteDto {
   @IsString()
   backgroundUrl: string;
 
-
-  @IsOptional()
-  @IsArray()
-  @IsMongoId({ each: true })
-  likes?: Types.ObjectId[];  
 }

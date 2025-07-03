@@ -30,7 +30,7 @@ export class GetQuotesDto {
 
     @IsString()
     @IsOptional()
-    @IsIn(['asc', 'desc', 'mostLikes', 'leastLikes'])
+    @IsIn(['asc', 'desc'])
     readonly sort?: string = 'asc';
   }
   

@@ -15,8 +15,8 @@ export class QuotesController {
   }
 
   @Get()
-  findAll(@Query() getQuotesDto: GetQuotesDto) {        
-    return this.quotesService.findAll(getQuotesDto);
+  getAll(@Query() getQuotesDto: GetQuotesDto) {        
+    return this.quotesService.getAll(getQuotesDto);
   }
 
   @Get(':id')

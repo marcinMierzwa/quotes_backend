@@ -13,7 +13,7 @@ export class QuotesService {
     return 'This action adds a new quote';
   }
 
-  async findAll(getQuotesDto: GetQuotesDto) {
+  async getAll(getQuotesDto: GetQuotesDto) {
     const { limit, skip, search, movie, character, sort } = getQuotesDto;
     const filter: any = {};
     if (search) {
@@ -31,10 +31,6 @@ export class QuotesService {
       sortOrder = { dialog: 1 }; 
     } else if (sort === 'desc') {
       sortOrder = { dialog: -1 };
-    } else if (sort === 'mostLikes') {
-      sortOrder = { likes: -1, dialog: 1 }; 
-    } else if (sort === 'leastLikes') {
-      sortOrder = { likes: 1, dialog: 1 }; 
     } else {
       sortOrder = { dialog: 1 };
     }
@@ -49,10 +45,10 @@ export class QuotesService {
       .limit(limit)
       .exec();
     const total = await this.quoteModel.countDocuments(filter);
-    const message = total === 0 ? 'No results found' : 'success';
+    console.log(quotes);
+    
     return {
       data: quotes,
-      message: message,
       pageIndex: getQuotesDto.skip,
       pageSize: limit,
       totalItems: total,

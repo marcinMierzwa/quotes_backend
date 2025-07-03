@@ -45,7 +45,6 @@ export class QuotesService {
       .limit(limit)
       .exec();
     const total = await this.quoteModel.countDocuments(filter);
-    console.log(quotes);
     
     return {
       data: quotes,

@@ -27,8 +27,6 @@ export class Quote extends Document {
   @Prop({ type: Number, default: 0 })
   likeCount: number;
 
-  @Prop({ type: Number, default: 0 })
-  dislikeCount: number
 }
 
 export const QuoteSchema = SchemaFactory.createForClass(Quote);

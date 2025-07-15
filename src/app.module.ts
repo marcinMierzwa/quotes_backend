@@ -9,6 +9,7 @@ import { AuthModule } from './domain/auth/auth.module';
 import { UsersModule } from './domain/users/users.module';
 import { MailModule } from './mail/mail.module';
 import { FavouritesModule } from './domain/favourites/favourites.module';
+import { LikesModule } from './domain/likes/likes.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FavouritesModule } from './domain/favourites/favourites.module';
     MailModule,
     AuthModule,
     FavouritesModule,
+    LikesModule,
   ],
   controllers: [],
   providers: [],

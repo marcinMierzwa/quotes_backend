@@ -6,10 +6,18 @@ import { CreateMovieDto } from './dtos/create-movie.dto';
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
+  @Get('')
+  async getAll() {
+    const movies = await this.moviesService.getAll();
+    return {
+      data: movies
+    }
+  }
+
 
   @Get('movie-name')
-  getAllMovieName() {
-    return this.moviesService.getAllMovieName();
+  async getAllMovieName() {
+    return await this.moviesService.getAllMovieName();
   }
 
 
@@ -20,8 +28,8 @@ export class MoviesController {
 
 
   @Get(':id')
-  findOne(@Param('id') id: string ) {
-    return this.moviesService.findOne(id);
+  async findOne(@Param('id') id: string ) {
+    return await this.moviesService.findOne(id);
   }
 
 }

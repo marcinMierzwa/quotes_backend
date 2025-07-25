@@ -28,6 +28,6 @@ export class QuotesController {
   async getOne(@Param() params:GetOneDto, @Request() req) {
     const userId = req.user ? req.user.id : undefined;      
     const quoteId = params.quoteId;
-    return await  this.quotesService.getOne(quoteId, userId);
+    return await this.quotesService.getOne(quoteId, userId);
   }
 }

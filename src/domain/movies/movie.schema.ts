@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 
 @Schema({
     versionKey: false,
-    timestamps: true
+    timestamps: true,
 })
 export class Movie extends Document {
   

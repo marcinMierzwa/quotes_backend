@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { MoviesService } from './movies.service';
-import { CreateMovieDto } from './dtos/create-movie.dto';
+import { GetMovieDto } from './dtos/get-movie.dto';
 
 @Controller('movies')
 export class MoviesController {
@@ -10,26 +10,21 @@ export class MoviesController {
   async getAll() {
     const movies = await this.moviesService.getAll();
     return {
-      data: movies
-    }
+      data: movies,
+    };
   }
-
 
   @Get('movie-name')
   async getAllMovieName() {
     return await this.moviesService.getAllMovieName();
   }
 
-
-  @Post()
-  create(@Body() createMovieDto: CreateMovieDto) {
-    return this.moviesService.create(createMovieDto);
+  @Get(':movieId')
+  async getOne(@Param() params: GetMovieDto) {
+    const movieId = params.movieId;
+    const movie = await this.moviesService.getOne(movieId);
+    return {
+      data: movie
+    }
   }
-
-
-  @Get(':id')
-  async findOne(@Param('id') id: string ) {
-    return await this.moviesService.findOne(id);
-  }
-
 }

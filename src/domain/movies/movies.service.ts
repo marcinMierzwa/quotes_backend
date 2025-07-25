@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateMovieDto } from './dtos/create-movie.dto';
+import { Model, Types } from 'mongoose';
 import { Movie } from './movie.schema';
 import { GetMovieResponseDto } from './dtos/get-movie-response.dto';
 
@@ -31,18 +30,15 @@ export class MoviesService {
     return movieName;
   }
 
-  async create(createMovieDto: CreateMovieDto) {
-    const movie = await this.movieModel.create(createMovieDto);
+  async getOne(movieId: Types.ObjectId): Promise<GetMovieResponseDto> {
+    const movie = await this.movieModel.findById(movieId).lean().exec();
+    if (!movie) {
+      throw new NotFoundException('Movie not found');
+    }
     return {
-      movie,
-      message: 'movie created successful',
-    };
-  }
-
-  async findOne(id: string) {
-    const movieById = await this.movieModel.findById(id);
-    return {
-      movieById,
+      ...movie,
+      _id: movie._id.toString(),
     };
   }
 }
+
